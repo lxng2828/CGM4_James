@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/save}" method="post">
+
+    <div style="display: none;">
+        <input type="text" id="id" name="id" th:value="${customer.id}" readonly><br><br>
+    </div>
+
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" th:value="${customer.name}" required><br><br>
+
+    <label for="email">Email:</label><br>
+    <input type="text" id="email" name="email" th:value="${customer.email}" required><br><br>
+
+    <label for="address">Address:</label><br>
+    <input type="text" id="address" name="address" th:value="${customer.address}" required><br><br>
+
+    <button type="submit">Submit</button>
+</form>
+<a th:href="@{/}">Home</a>
+</body>
+</html>
