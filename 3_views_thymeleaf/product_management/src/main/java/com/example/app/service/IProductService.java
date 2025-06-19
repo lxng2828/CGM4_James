@@ -1,6 +1,6 @@
-package com.codegym.baitap1.service;
+package com.example.app.service;
 
-import com.codegym.baitap1.model.Product;
+import com.example.app.model.Product;
 
 import java.util.List;
 

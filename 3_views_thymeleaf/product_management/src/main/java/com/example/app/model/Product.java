@@ -1,4 +1,4 @@
-package com.codegym.baitap1.model;
+package com.example.app.model;
 
 public class Product {
     private int id;

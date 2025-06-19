@@ -1,8 +1,8 @@
-package com.codegym.baitap1.controller;
+package com.example.app.controller;
 
-import com.codegym.baitap1.model.Product;
-import com.codegym.baitap1.service.IProductService;
-import com.codegym.baitap1.service.ProductService;
+import com.example.app.model.Product;
+import com.example.app.service.IProductService;
+import com.example.app.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

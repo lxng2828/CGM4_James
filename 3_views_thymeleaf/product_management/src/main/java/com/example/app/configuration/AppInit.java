@@ -1,4 +1,4 @@
-package com.codegym.baitap1.configuration;
+package com.example.app.configuration;
 
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
