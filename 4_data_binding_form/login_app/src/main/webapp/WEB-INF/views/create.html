@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm mới khách hàng</title>
+</head>
+<body>
+<h1>Thêm mới khách hàng</h1>
+<p><a th:href="@{/customer}">Quay lại danh sách</a></p>
+
+<form th:action="@{/customer/save}" th:object="${customer}" method="post">
+    <table>
+        <tr>
+            <td>Tên:</td>
+            <td><input type="text" th:field="*{name}"/></td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td><input type="email" th:field="*{email}"/></td>
+        </tr>
+        <tr>
+            <td>Địa chỉ:</td>
+            <td><input type="text" th:field="*{address}"/></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Lưu"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
