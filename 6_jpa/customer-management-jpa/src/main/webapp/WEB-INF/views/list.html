@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Khách hàng</title>
+</head>
+<body>
+
+<h1>Quản lý Khách hàng</h1>
+
+<p>
+    <a th:href="@{/customers/new}">Thêm Khách hàng mới</a>
+</p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Họ và Tên</th>
+        <th>Email</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="customer : ${customers}">
+        <td th:text="${customer.id}">1</td>
+        <td th:text="${customer.name}">Nguyễn Văn A</td>
+        <td th:text="${customer.email}">a.nguyen@example.com</td>
+        <td>
+            <a th:href="@{/customers/edit/{id}(id=${customer.id})}">Sửa</a>
+            &nbsp; | &nbsp;
+            <a th:href="@{/customers/delete/{id}(id=${customer.id})}"
+               onclick="return confirm('Bạn có chắc chắn muốn xóa khách hàng này không?');">Xóa</a>
+        </td>
+    </tr>
+    <tr th:if="${customers.isEmpty()}">
+        <td colspan="4">Không tìm thấy khách hàng nào.</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

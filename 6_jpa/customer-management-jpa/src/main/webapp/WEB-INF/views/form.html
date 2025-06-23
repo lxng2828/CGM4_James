@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}">Form Khách hàng</title>
+</head>
+<body>
+
+<h1 th:text="${pageTitle}">Form Khách hàng</h1>
+
+<form th:action="@{/customers/save}" th:object="${customer}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+
+    <div>
+        <label for="name">Họ và Tên:</label><br>
+        <input type="text" id="name" th:field="*{name}" required size="50">
+    </div>
+    <br>
+    <div>
+        <label for="emai">Email:</label><br>
+        <input type="email" id="emai" th:field="*{email}" required size="50">
+    </div>
+    <br>
+    <div>
+        <button type="submit">Lưu</button>
+        <a th:href="@{/customers}">
+            <button type="button">Hủy</button>
+        </a>
+    </div>
+</form>
+
+</body>
+</html>
