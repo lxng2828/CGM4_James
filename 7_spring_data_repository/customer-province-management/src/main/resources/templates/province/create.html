@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tạo mới Tỉnh</title>
+</head>
+
+<body>
+    <h1>Tạo mới Tỉnh</h1>
+    <p>
+        <a th:href="@{/provinces}">Quay lại danh sách tỉnh</a>
+    </p>
+    <div th:if="${message}">
+        <p th:text="${message}"></p>
+    </div>
+    <form th:action="@{/provinces/create}" th:object="${province}" method="post">
+        <table>
+            <tr>
+                <td>Tên tỉnh:</td>
+                <td><input type="text" th:field="*{name}" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Tạo mới" /></td>
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>
