@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Tiêu đề sẽ được đặt động từ controller -->
+    <title th:text="${message}">Form Tỉnh</title>
+</head>
+
+<body>
+    <h1 th:text="${message}">Form Tỉnh</h1>
+    <p>
+        <a th:href="@{/provinces}">Quay lại danh sách</a>
+    </p>
+    <!-- 
+      - Form này sẽ post đến /provinces/create nếu là tạo mới (province.id là null).
+      - Form sẽ post đến /provinces/edit nếu là chỉnh sửa (province.id có giá trị).
+    -->
+    <form th:action="${province.id == null} ? @{/provinces/create} : @{/provinces/edit}" th:object="${province}"
+        method="post">
+        <!-- Input ẩn để lưu id khi chỉnh sửa -->
+        <input type="hidden" th:field="*{id}" />
+        <table>
+            <tr>
+                <td>Tên Tỉnh/Thành phố:</td>
+                <td><input type="text" th:field="*{name}" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Lưu lại"></td>
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>

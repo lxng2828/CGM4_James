@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Chi tiết tỉnh ' + ${province.name}">Chi tiết tỉnh</title>
+</head>
+
+<body>
+    <h1>Tỉnh: <span th:text="${province.name}"></span></h1>
+    <p>
+        <a th:href="@{/provinces}">Quay lại danh sách tỉnh</a>
+    </p>
+
+    <hr>
+
+    <h2>Danh sách khách hàng</h2>
+    <div th:if="${customers.isEmpty()}">
+        <p>Chưa có khách hàng nào tại tỉnh này.</p>
+    </div>
+
+    <table border="1" th:unless="${customers.isEmpty()}">
+        <thead>
+            <tr>
+                <th>Tên</th>
+                <th>Họ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="customer : ${customers}">
+                <td th:text="${customer.firstName}"></td>
+                <td th:text="${customer.lastName}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

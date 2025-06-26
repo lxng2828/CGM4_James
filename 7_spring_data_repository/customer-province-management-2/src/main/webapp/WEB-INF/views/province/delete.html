@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xác nhận xóa Tỉnh</title>
+</head>
+
+<body>
+    <h1>Xóa Tỉnh/Thành phố</h1>
+    <h2>Bạn có chắc chắn muốn xóa tỉnh "<span th:text="${province.name}"></span>" không?</h2>
+    <p>Hành động này không thể hoàn tác.</p>
+
+    <form th:action="@{/provinces/delete}" method="post">
+        <input type="hidden" name="id" th:value="${province.id}" />
+        <input type="submit" value="Xóa ngay" />
+        <a th:href="@{/provinces}">Thôi, không xóa nữa</a>
+    </form>
+</body>
+
+</html>

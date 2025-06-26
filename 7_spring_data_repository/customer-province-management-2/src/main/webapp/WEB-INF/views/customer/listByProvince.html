@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Khách hàng theo tỉnh</title>
+</head>
+<body>
+<h1>Khách hàng tại <span th:text="${currentProvince.name}"></span></h1>
+<p>
+    <a th:href="@{/customers}">Quay lại danh sách tổng</a>
+</p>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Tên</th>
+        <th>Họ</th>
+        <th>Chỉnh sửa</th>
+        <th>Xóa</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="customer : ${customers}">
+        <td th:text="${customer.firstName}"></td>
+        <td th:text="${customer.lastName}"></td>
+        <td><a th:href="@{/customers/edit/{id}(id=${customer.id})}">Sửa</a></td>
+        <td><a th:href="@{/customers/delete/{id}(id=${customer.id})}">Xóa</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

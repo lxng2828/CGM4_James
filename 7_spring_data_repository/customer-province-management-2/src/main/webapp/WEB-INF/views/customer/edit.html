@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh sửa thông tin khách hàng</title>
+</head>
+<body>
+<h1>Chỉnh sửa thông tin khách hàng</h1>
+<p>
+    <a th:href="@{/customers}">Quay lại danh sách khách hàng</a>
+</p>
+<form th:action="@{/customers/edit}" th:object="${customer}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+    <table>
+        <tr>
+            <td>Tên:</td>
+            <td><input type="text" th:field="*{firstName}"/></td>
+        </tr>
+        <tr>
+            <td>Họ:</td>
+            <td><input type="text" th:field="*{lastName}"/></td>
+        </tr>
+        <tr>
+            <td>Tỉnh:</td>
+            <td>
+                <select th:field="*{province}">
+                    <option th:each="p : ${provinces}" th:value="${p.id}" th:text="${p.name}" th:selected="${p.id == customer.province.id}"></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Cập nhật"></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
