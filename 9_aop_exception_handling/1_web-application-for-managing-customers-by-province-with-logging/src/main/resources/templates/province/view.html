@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xem Tỉnh</title>
+</head>
+
+<body>
+    <h1 th:text="'Chi tiết Tỉnh: ' + ${province.name}"></h1>
+    <p>
+        <a th:href="@{/provinces}">Quay lại danh sách tỉnh</a>
+    </p>
+    <h3>Danh sách khách hàng</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Tên</th>
+                <th>Họ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="c : ${customers}">
+                <td th:text="${c.firstName}"></td>
+                <td th:text="${c.lastName}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
