@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'war' // Do bạn có /WEB-INF/views => dùng WAR, không phải Spring Boot
+}
+
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Web MVC
+    implementation 'org.springframework:spring-webmvc:5.3.34'
+
+    // Thymeleaf
+    implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
+    implementation 'org.thymeleaf:thymeleaf-spring5:3.1.2.RELEASE'
+
+    // JPA API & Hibernate (dùng javax)
+    implementation 'javax.persistence:javax.persistence-api:2.2'
+    implementation 'org.hibernate:hibernate-core:5.6.15.Final'
+
+    // Spring ORM + JPA support
+    implementation 'org.springframework:spring-orm:5.3.34'
+
+    // MySQL JDBC Driver
+    runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+
+    // Java EE Transaction & Activation APIs (dùng javax)
+    implementation 'javax.transaction:javax.transaction-api:1.3'
+    implementation 'javax.activation:activation:1.1.1'
+
+    // Servlet API (chỉ cần compileOnly vì app server sẽ cung cấp)
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+
+    // Logging (tùy chọn)
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    runtimeOnly 'org.slf4j:slf4j-simple:1.7.36'
+
+    // Lombok (tự động tạo getter/setter, constructor...)
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
+    // Spring Data JPA
+    implementation 'org.springframework.data:spring-data-jpa:2.7.0'
+
+    // Java Bean Validation API (javax)
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+
+    // Hibernate Validator cho Java Bean Validation
+    implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
+
+    // Các thư viện phụ trợ cho Hibernate Validator
+    implementation 'org.glassfish:javax.el:3.0.0'
+
+    // Test Dependencies (Tùy chọn)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
