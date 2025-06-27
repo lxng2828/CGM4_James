@@ -1,0 +1,45 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Them bai hat moi</title>
+</head>
+
+<body>
+
+    <form th:action="@{/addNewSong}" th:object="${song}" method="post">
+        <div style="display: none;">
+            <label for="id">Id:</label>
+            <input type="text" id="id" th:field="*{id}" />
+            <span th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></span>
+        </div>
+        <br />
+
+        <div>
+            <label for="songName">Ten bai hat:</label>
+            <input type="text" id="songName" th:field="*{songName}" />
+            <span th:if="${#fields.hasErrors('songName')}" th:errors="*{songName}"></span>
+        </div>
+        <br />
+
+        <div>
+            <label for="artistName">Ten nghe si:</label>
+            <input type="text" id="artistName" th:field="*{artistName}" />
+            <span th:if="${#fields.hasErrors('artistName')}" th:errors="*{artistName}"></span>
+        </div>
+        <br />
+
+        <div>
+            <label for="category">Tuổi:</label>
+            <input type="text" id="category" th:field="*{category}" />
+            <span th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+        </div>
+        <br />
+
+
+        <button type="submit">Them bai hat</button>
+    </form>
+</body>
+
+</html>
