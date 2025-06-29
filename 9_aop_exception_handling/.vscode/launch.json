@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AopExceptionHandlingApplication<aop_exception_handling>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.codegym.aop_exception_handling.AopExceptionHandlingApplication",
+            "projectName": "aop_exception_handling",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
