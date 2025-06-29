@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bức ảnh của ngày</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 800px; margin: auto; }
+        img { max-width: 100%; height: auto; border-radius: 8px; }
+        .comment-box, .feedback-form { border: 1px solid #ccc; padding: 15px; margin-top: 20px; border-radius: 8px; }
+        .comment { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .comment:last-child { border-bottom: none; }
+        input, textarea { width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        .like-btn { text-decoration: none; background-color: #28a745; color: white; padding: 5px 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>[Bài tập] Chương trình hiển thị "Bức ảnh của ngày"</h2>
+
+    <div>
+        <img src="https://i.pinimg.com/originals/9d/ce/7a/9dce7a8a2b537a77e77a1a45a331742e.jpg" alt="Picture of the day">
+    </div>
+
+    <div class="feedback-form">
+        <h3>Feedback</h3>
+        <form th:action="@{/comment}" th:object="${newComment}" method="post">
+            <div class="rating">
+                <label>Đánh giá:</label>
+                <input type="number" th:field="*{rating}" min="1" max="5" required>
+            </div>
+            <div>
+                <label for="author">Author:</label>
+                <input type="text" id="author" th:field="*{author}" required>
+            </div>
+            <div>
+                <label for="feedback">Feedback:</label>
+                <textarea id="feedback" th:field="*{feedback}" rows="4" required></textarea>
+            </div>
+            <button type="submit">Comment</button>
+        </form>
+    </div>
+
+    <div class="comment-box">
+        <h3>Bình luận</h3>
+        <div th:each="comment : ${comments}" class="comment">
+            <p><strong><span th:text="${comment.author}"></span></strong> đã đánh giá <span th:text="${comment.rating}"></span> sao</p>
+            <p th:text="${comment.feedback}"></p>
+            <div>
+                <a th:href="@{/like/{id}(id=${comment.id})}" class="like-btn">Like</a>
+                <span th:text="${comment.likes}">0</span> likes
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lỗi</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        .error-container { border: 2px solid red; max-width: 600px; margin: auto; padding: 20px; border-radius: 8px; }
+        a { text-decoration: none; color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Đã có lỗi xảy ra!</h1>
+        <p th:text="${errorMessage}">Nội dung lỗi mặc định.</p>
+        <a th:href="@{/}">Quay lại trang chủ</a>
+    </div>
+</body>
+</html>
