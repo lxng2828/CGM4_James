@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thư viện Sách</title>
+</head>
+<body>
+    <h1>Danh sách Sách</h1>
+    <h3 th:if="${message}" th:text="${message}" style="color: green;"></h3>
+    <a th:href="@{/return}">Trả sách</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Tên sách</th>
+                <th>Tác giả</th>
+                <th>Số lượng còn lại</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="book : ${books}">
+                <td th:text="${book.title}"></td>
+                <td th:text="${book.author}"></td>
+                <td th:text="${book.quantity}"></td>
+                <td><a th:href="@{/view/{id}(id=${book.id})}">Xem chi tiết</a></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
