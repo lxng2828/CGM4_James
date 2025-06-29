@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chào mừng</title>
+</head>
+<body>
+<div class="welcome-container">
+    <h2 th:text="'Chào mừng, ' + ${username} + '!'"></h2>
+    <p>Bạn đã đăng nhập thành công vào hệ thống.</p>
+    <a th:href="@{/logout}">Đăng xuất</a>
+</div>
+</body>
+</html>
