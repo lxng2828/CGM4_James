@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Điện Thoại (jQuery)</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>Quản Lý Điện Thoại (jQuery)</h1>
+
+    <hr>
+
+    <div id="messageArea">
+    </div>
+
+    <h2>Thêm/Cập Nhật Điện Thoại</h2>
+    <div>
+        <label for="phoneId">ID (để cập nhật, để trống nếu thêm mới):</label><br>
+        <input type="number" id="phoneId"><br><br>
+
+        <label for="producer">Nhà Sản Xuất:</label><br>
+        <input type="text" id="producer"><br><br>
+
+        <label for="model">Model:</label><br>
+        <input type="text" id="model"><br><br>
+
+        <label for="price">Giá:</label><br>
+        <input type="number" id="price" step="0.01"><br><br>
+
+        <button id="savePhoneBtn">Lưu Điện Thoại</button>
+    </div>
+
+    <hr>
+
+    <h2>Danh Sách Điện Thoại</h2>
+    <button id="getAllPhonesBtn">Tải Tất Cả Điện Thoại</button>
+    <div id="phoneList">
+    </div>
+
+    <hr>
+
+    <h2>Tìm Điện Thoại theo ID</h2>
+    <div>
+        <label for="searchId">ID cần tìm:</label><br>
+        <input type="number" id="searchId"><br><br>
+        <button id="searchPhoneBtn">Tìm</button>
+        <div id="phoneDetail">
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>Xóa Điện Thoại</h2>
+    <div>
+        <label for="deleteId">ID cần xóa:</label><br>
+        <input type="number" id="deleteId"><br><br>
+        <button id="deletePhoneBtn">Xóa</button>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:8080/api/phones';
+
+        function showMessage(message, isError = false) {
+            const messageArea = $('#messageArea');
+            const msgDiv = $('<div>').text(message);
+
+            msgDiv.css({
+                'padding': '10px',
+                'margin': '10px 0',
+                'border': '1px solid',
+                'background-color': isError ? '#ffe0e0' : '#e0ffe0',
+                'border-color': isError ? '#cc0000' : '#00cc00',
+                'color': isError ? '#cc0000' : '#00cc00'
+            });
+
+            messageArea.prepend(msgDiv);
+
+            setTimeout(() => {
+                msgDiv.fadeOut(500, function () {
+                    $(this).remove();
+                });
+            }, 5000);
+        }
+
+        function getAllPhones() {
+            const phoneListDiv = $('#phoneList');
+            phoneListDiv.html('Đang tải...');
+
+            $.ajax({
+                url: BASE_URL,
+                method: 'GET',
+                dataType: 'json',
+                success: function (phones) {
+                    if (phones.length === 0) {
+                        phoneListDiv.html('<p>Không có điện thoại nào.</p>');
+                    } else {
+                        let html = '<ul>';
+                        $.each(phones, function (index, phone) {
+                            html += `<li>ID: ${phone.id}, NSX: ${phone.producer}, Model: ${phone.model}, Giá: ${phone.price}</li>`;
+                        });
+                        html += '</ul>';
+                        phoneListDiv.html(html);
+                    }
+                    showMessage('Tải danh sách điện thoại thành công.');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Lỗi khi tải điện thoại:', error);
+                    phoneListDiv.html('<p style="color: red;">Lỗi khi tải điện thoại. Vui lòng kiểm tra console.</p>');
+                    showMessage('Lỗi khi tải danh sách điện thoại. Vui lòng kiểm tra console.', true);
+                }
+            });
+        }
+
+        function getPhoneById() {
+            const searchId = $('#searchId').val();
+            const phoneDetailDiv = $('#phoneDetail');
+            phoneDetailDiv.empty();
+
+            if (!searchId) {
+                showMessage('Vui lòng nhập ID để tìm kiếm.', true);
+                return;
+            }
+
+            $.ajax({
+                url: `${BASE_URL}/${searchId}`,
+                method: 'GET',
+                dataType: 'json',
+                success: function (phone) {
+                    phoneDetailDiv.html(`
+                        <p><strong>Chi tiết Điện Thoại:</strong></p>
+                        <ul>
+                            <li>ID: ${phone.id}</li>
+                            <li>Nhà Sản Xuất: ${phone.producer}</li>
+                            <li>Model: ${phone.model}</li>
+                            <li>Giá: ${phone.price}</li>
+                        </ul>
+                    `);
+                    showMessage('Tìm điện thoại thành công.');
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status === 404) {
+                        phoneDetailDiv.html(`<p style="color: orange;">Không tìm thấy điện thoại với ID: ${searchId}</p>`);
+                        showMessage(`Không tìm thấy điện thoại với ID: ${searchId}`, true);
+                    } else {
+                        console.error('Lỗi khi tìm điện thoại:', error);
+                        phoneDetailDiv.html('<p style="color: red;">Lỗi khi tìm điện thoại. Vui lòng kiểm tra console.</p>');
+                        showMessage('Lỗi khi tìm điện thoại. Vui lòng kiểm tra console.', true);
+                    }
+                }
+            });
+        }
+
+        function savePhone() {
+            const id = $('#phoneId').val();
+            const producer = $('#producer').val();
+            const model = $('#model').val();
+            const price = $('#price').val();
+
+            if (!producer || !model || !price) {
+                showMessage('Vui lòng điền đầy đủ Nhà Sản Xuất, Model và Giá.', true);
+                return;
+            }
+            if (isNaN(parseFloat(price))) {
+                showMessage('Giá phải là một số hợp lệ.', true);
+                return;
+            }
+
+            const phoneData = {
+                producer: producer,
+                model: model,
+                price: parseFloat(price)
+            };
+
+            let methodType = 'POST';
+            let url = BASE_URL;
+
+            if (id) {
+                methodType = 'PUT';
+                url = `${BASE_URL}/${id}`;
+                phoneData.id = parseInt(id);
+            }
+
+            $.ajax({
+                url: url,
+                method: methodType,
+                contentType: 'application/json',
+                data: JSON.stringify(phoneData),
+                dataType: 'json',
+                success: function (resultPhone) {
+                    showMessage(`Lưu điện thoại thành công: ID ${resultPhone.id}`);
+                    getAllPhones();
+                    clearForm();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Lỗi khi lưu điện thoại:', error);
+                    showMessage('Lỗi khi lưu điện thoại. Vui lòng kiểm tra console.', true);
+                }
+            });
+        }
+
+        function deletePhone() {
+            const deleteId = $('#deleteId').val();
+
+            if (!deleteId) {
+                showMessage('Vui lòng nhập ID để xóa.', true);
+                return;
+            }
+
+            if (!confirm(`Bạn có chắc chắn muốn xóa điện thoại với ID: ${deleteId} không?`)) {
+                return;
+            }
+
+            $.ajax({
+                url: `${BASE_URL}/${deleteId}`,
+                method: 'DELETE',
+                success: function () {
+                    showMessage(`Xóa điện thoại với ID: ${deleteId} thành công.`);
+                    getAllPhones();
+                    $('#deleteId').val('');
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status === 404) {
+                        showMessage(`Không tìm thấy điện thoại với ID: ${deleteId} để xóa.`, true);
+                    } else {
+                        console.error('Lỗi khi xóa điện thoại:', error);
+                        showMessage('Lỗi khi xóa điện thoại. Vui lòng kiểm tra console.', true);
+                    }
+                }
+            });
+        }
+
+        function clearForm() {
+            $('#phoneId').val('');
+            $('#producer').val('');
+            $('#model').val('');
+            $('#price').val('');
+        }
+
+        $(document).ready(function () {
+            $('#savePhoneBtn').on('click', savePhone);
+            $('#getAllPhonesBtn').on('click', getAllPhones);
+            $('#searchPhoneBtn').on('click', getPhoneById);
+            $('#deletePhoneBtn').on('click', deletePhone);
+
+            getAllPhones();
+        });
+    </script>
+</body>
+
+</html>
