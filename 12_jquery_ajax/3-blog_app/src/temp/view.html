@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title th:text="${blog.title}"></title>
+</head>
+
+<body>
+    <a href="/blogs">Quay lại danh sách</a>
+    <h1 th:text="${blog.title}"></h1>
+    <p><i>Tóm tắt: <span th:text="${blog.summary}"></span></i></p>
+    <hr />
+    <div th:text="${blog.content}"></div>
+</body>
+
+</html>

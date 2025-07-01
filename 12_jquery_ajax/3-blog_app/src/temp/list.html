@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Danh sách Blog</title>
+</head>
+
+<body>
+    <h1>Blog cá nhân</h1>
+    <p th:if="${message}" th:text="${message}"></p>
+    <a href="/blogs/create">Viết bài mới</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Tiêu đề</th>
+                <th>Tóm tắt</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="blog : ${blogs}">
+                <td th:text="${blog.title}"></td>
+                <td th:text="${blog.summary}"></td>
+                <td>
+                    <a th:href="@{/blogs/view/{id}(id=${blog.id})}">Xem</a> |
+                    <a th:href="@{/blogs/edit/{id}(id=${blog.id})}">Sửa</a> |
+                    <a th:href="@{/blogs/delete/{id}(id=${blog.id})}"
+                        onclick="return confirm('Bạn chắc chắn muốn xóa?')">Xóa</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

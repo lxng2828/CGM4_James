@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Blog (jQuery AJAX)</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2 { color: #333; }
+        div { margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        input[type="text"], input[type="number"], textarea { width: 98%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px; }
+        button:hover { background-color: #0056b3; }
+        #messageArea div {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid;
+            border-radius: 4px;
+        }
+        .success-message {
+            background-color: #e0ffe0;
+            border-color: #00cc00;
+            color: #00cc00;
+        }
+        .error-message {
+            background-color: #ffe0e0;
+            border-color: #cc0000;
+            color: #cc0000;
+        }
+        #blogList ul { list-style: none; padding: 0; }
+        #blogList li { background-color: #f9f9f9; margin-bottom: 8px; padding: 10px; border: 1px solid #eee; border-radius: 4px; }
+        #blogList li button { background-color: #28a745; margin-left: 10px; }
+        #blogList li button.delete-btn { background-color: #dc3545; }
+        #blogDetail { background-color: #e9ecef; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Quản Lý Blog</h1>
+
+    <div id="messageArea">
+        </div>
+
+    <hr>
+
+    <h2>Thêm/Cập Nhật Blog</h2>
+    <div>
+        <label for="blogId">ID (để cập nhật, để trống nếu thêm mới):</label><br>
+        <input type="number" id="blogId"><br><br>
+
+        <label for="blogTitle">Tiêu đề:</label><br>
+        <input type="text" id="blogTitle"><br><br>
+
+        <label for="blogSummary">Tóm tắt:</label><br>
+        <input type="text" id="blogSummary"><br><br>
+
+        <label for="blogContent">Nội dung:</label><br>
+        <textarea id="blogContent" rows="5"></textarea><br><br>
+
+        <button id="saveBlogBtn">Lưu Blog</button>
+        <button id="clearFormBtn">Xóa Form</button>
+    </div>
+
+    <hr>
+
+    <h2>Danh Sách Blog</h2>
+    <button id="getAllBlogsBtn">Tải Tất Cả Blog</button>
+    <div id="blogList">
+        </div>
+
+    <hr>
+
+    <h2>Tìm Blog theo ID</h2>
+    <div>
+        <label for="searchBlogId">ID cần tìm:</label><br>
+        <input type="number" id="searchBlogId"><br><br>
+        <button id="searchBlogBtn">Tìm</button>
+        <div id="blogDetail">
+            </div>
+    </div>
+
+    <hr>
+
+    <h2>Xóa Blog</h2>
+    <div>
+        <label for="deleteBlogId">ID cần xóa:</label><br>
+        <input type="number" id="deleteBlogId"><br><br>
+        <button id="deleteBlogBtn">Xóa</button>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:8080/api/blogs';
+
+        function showMessage(message, isError = false) {
+            const messageArea = $('#messageArea');
+            const msgDiv = $('<div>').text(message);
+
+            if (isError) {
+                msgDiv.addClass('error-message');
+            } else {
+                msgDiv.addClass('success-message');
+            }
+
+            messageArea.prepend(msgDiv);
+
+            setTimeout(() => {
+                msgDiv.fadeOut(500, function() {
+                    $(this).remove();
+                });
+            }, 5000);
+        }
+
+        function getAllBlogs() {
+            const blogListDiv = $('#blogList');
+            blogListDiv.html('Đang tải...');
+
+            $.ajax({
+                url: BASE_URL,
+                method: 'GET',
+                dataType: 'json',
+                success: function(blogs) {
+                    if (blogs.length === 0) {
+                        blogListDiv.html('<p>Không có blog nào.</p>');
+                    } else {
+                        let html = '<ul>';
+                        $.each(blogs, function(index, blog) {
+                            html += `
+                                <li>
+                                    <strong>ID: ${blog.id}</strong> - <strong>${blog.title}</strong>
+                                    <p>${blog.summary}</p>
+                                    <button onclick="getBlogByIdFromList(${blog.id})">Xem</button>
+                                    <button onclick="editBlogFromList(${blog.id})">Sửa</button>
+                                    <button class="delete-btn" onclick="deleteBlogFromList(${blog.id})">Xóa</button>
+                                </li>
+                            `;
+                        });
+                        html += '</ul>';
+                        blogListDiv.html(html);
+                    }
+                    showMessage('Tải danh sách blog thành công.');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Lỗi khi tải blog:', error);
+                    blogListDiv.html('<p class="error-message">Lỗi khi tải blog. Vui lòng kiểm tra console.</p>');
+                    showMessage('Lỗi khi tải danh sách blog. Vui lòng kiểm tra console.', true);
+                }
+            });
+        }
+
+        function getBlogById() {
+            const searchId = $('#searchBlogId').val();
+            const blogDetailDiv = $('#blogDetail');
+            blogDetailDiv.empty();
+
+            if (!searchId) {
+                showMessage('Vui lòng nhập ID để tìm kiếm.', true);
+                return;
+            }
+
+            $.ajax({
+                url: `${BASE_URL}/${searchId}`,
+                method: 'GET',
+                dataType: 'json',
+                success: function(blog) {
+                    blogDetailDiv.html(`
+                        <p><strong>Chi tiết Blog:</strong></p>
+                        <ul>
+                            <li>ID: ${blog.id}</li>
+                            <li>Tiêu đề: ${blog.title}</li>
+                            <li>Tóm tắt: ${blog.summary}</li>
+                            <li>Nội dung: ${blog.content}</li>
+                        </ul>
+                    `);
+                    showMessage('Tìm blog thành công.');
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 404) {
+                        blogDetailDiv.html(`<p class="error-message">Không tìm thấy blog với ID: ${searchId}</p>`);
+                        showMessage(`Không tìm thấy blog với ID: ${searchId}`, true);
+                    } else {
+                        console.error('Lỗi khi tìm blog:', error);
+                        blogDetailDiv.html('<p class="error-message">Lỗi khi tìm blog. Vui lòng kiểm tra console.</p>');
+                        showMessage('Lỗi khi tìm blog. Vui lòng kiểm tra console.', true);
+                    }
+                }
+            });
+        }
+
+        // Hàm gọi từ danh sách để xem chi tiết
+        function getBlogByIdFromList(id) {
+            $('#searchBlogId').val(id);
+            getBlogById();
+        }
+
+        // Hàm gọi từ danh sách để sửa
+        function editBlogFromList(id) {
+            $.ajax({
+                url: `${BASE_URL}/${id}`,
+                method: 'GET',
+                dataType: 'json',
+                success: function(blog) {
+                    $('#blogId').val(blog.id);
+                    $('#blogTitle').val(blog.title);
+                    $('#blogSummary').val(blog.summary);
+                    $('#blogContent').val(blog.content);
+                    showMessage(`Đã tải blog ID ${blog.id} vào form để chỉnh sửa.`);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Lỗi khi tải blog để chỉnh sửa:', error);
+                    showMessage('Lỗi khi tải blog để chỉnh sửa. Vui lòng kiểm tra console.', true);
+                }
+            });
+        }
+
+        function saveBlog() {
+            const id = $('#blogId').val();
+            const title = $('#blogTitle').val();
+            const summary = $('#blogSummary').val();
+            const content = $('#blogContent').val();
+
+            if (!title || !summary || !content) {
+                showMessage('Vui lòng điền đầy đủ Tiêu đề, Tóm tắt và Nội dung.', true);
+                return;
+            }
+
+            const blogData = {
+                title: title,
+                summary: summary,
+                content: content
+            };
+
+            let methodType = 'POST';
+            let url = BASE_URL;
+
+            if (id) {
+                methodType = 'PUT';
+                url = `${BASE_URL}/${id}`;
+                blogData.id = parseInt(id);
+            }
+
+            $.ajax({
+                url: url,
+                method: methodType,
+                contentType: 'application/json',
+                data: JSON.stringify(blogData),
+                dataType: 'json',
+                success: function(resultBlog) {
+                    showMessage(`Lưu blog thành công: ID ${resultBlog.id}`);
+                    getAllBlogs();
+                    clearForm();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Lỗi khi lưu blog:', error);
+                    showMessage('Lỗi khi lưu blog. Vui lòng kiểm tra console.', true);
+                }
+            });
+        }
+
+        function deleteBlog() {
+            const deleteId = $('#deleteBlogId').val();
+
+            if (!deleteId) {
+                showMessage('Vui lòng nhập ID để xóa.', true);
+                return;
+            }
+
+            if (!confirm(`Bạn có chắc chắn muốn xóa blog với ID: ${deleteId} không?`)) {
+                return;
+            }
+
+            $.ajax({
+                url: `${BASE_URL}/${deleteId}`,
+                method: 'DELETE',
+                success: function() {
+                    showMessage(`Xóa blog với ID: ${deleteId} thành công.`);
+                    getAllBlogs();
+                    $('#deleteBlogId').val('');
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 404) {
+                        showMessage(`Không tìm thấy blog với ID: ${deleteId} để xóa.`, true);
+                    } else {
+                        console.error('Lỗi khi xóa blog:', error);
+                        showMessage('Lỗi khi xóa blog. Vui lòng kiểm tra console.', true);
+                    }
+                }
+            });
+        }
+
+        // Hàm gọi từ danh sách để xóa
+        function deleteBlogFromList(id) {
+            $('#deleteBlogId').val(id); // Đặt ID vào ô xóa
+            deleteBlog(); // Gọi hàm xóa
+        }
+
+        function clearForm() {
+            $('#blogId').val('');
+            $('#blogTitle').val('');
+            $('#blogSummary').val('');
+            $('#blogContent').val('');
+            showMessage('Form đã được xóa.');
+        }
+
+        $(document).ready(function() {
+            $('#saveBlogBtn').on('click', saveBlog);
+            $('#clearFormBtn').on('click', clearForm);
+            $('#getAllBlogsBtn').on('click', getAllBlogs);
+            $('#searchBlogBtn').on('click', getBlogById);
+            $('#deleteBlogBtn').on('click', deleteBlog);
+
+            getAllBlogs(); // Tải danh sách blog khi trang load
+        });
+    </script>
+</body>
+</html>
