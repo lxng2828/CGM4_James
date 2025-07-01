@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Effects Practice</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        .animated-box {
+            background: #98bf21;
+            height: 100px;
+            width: 200px;
+            position: relative;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            color: black;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Bài tập hiệu ứng jQuery</h1>
+
+    <h2>Phần 1: Show/Hide</h2>
+    <p id="toggleText">Nếu bạn click vào nút "Hide", tôi sẽ biến mất.</p>
+    <button id="hideBtn">Hide</button>
+    <button id="showBtn">Show</button>
+
+    <h2>Phần 2: Animate</h2>
+    <button id="startAnimateBtn">Start Animation</button>
+    <p>
+        Theo mặc định, tất cả các phần tử HTML có vị trí tĩnh và không thể di chuyển.
+        <br> Để thao tác với vị trí, hãy nhớ đặt thuộc tính CSS position của phần tử thành relative, fixed hoặc
+        absolute!
+    </p>
+    <div class="animated-box">HELLO</div>
+
+    <script>
+        $(document).ready(function () {
+
+            $("#hideBtn").click(function () {
+                $("#toggleText").hide("slow");
+            });
+
+            $("#showBtn").click(function () {
+                $("#toggleText").show("slow");
+            });
+
+            $("#startAnimateBtn").click(function () {
+                var $animatedBox = $(".animated-box");
+
+                $animatedBox.animate({
+                    left: '250px',
+                    fontSize: '50px',
+                    width: '300px'
+                }, 1000, function () {
+
+                    console.log("Animation completed!");
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
