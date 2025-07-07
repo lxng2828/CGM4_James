@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Chủ</title>
+</head>
+
+<body>
+    <h1>Demo Phân Quyền</h1>
+
+    <div sec:authorize="isAuthenticated()">
+        <p>Xin chào, <b sec:authentication="name">Tên người dùng</b>!</p>
+        <p>Vai trò của bạn: <b sec:authentication="principal.authorities">Vai trò</b></p>
+    </div>
+
+    <h3>Menu Điều Hướng</h3>
+    <nav>
+        <ul>
+            <li sec:authorize="hasAnyRole('USER', 'ADMIN', 'DBA')">
+                <a th:href="@{/client}">Trang Client</a>
+            </li>
+            <li sec:authorize="hasAnyRole('ADMIN', 'DBA')">
+                <a th:href="@{/admin}">Trang Admin</a>
+            </li>
+            <li sec:authorize="hasRole('DBA')">
+                <a th:href="@{/db}">Trang DB</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div sec:authorize="isAuthenticated()">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Đăng xuất</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
