@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Trang Quản trị</title>
+</head>
+
+<body>
+    <h1>Đây là trang dành cho Quản trị viên (Admin)</h1>
+    <p><a th:href="@{/}">Về trang chủ</a></p>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Đăng xuất" />
+    </form>
+</body>
+
+</html>
