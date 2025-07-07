@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Danh sách Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info {
+            float: right;
+            text-align: right;
+        }
+
+        .user-info a {
+            margin-left: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .user-info a:hover {
+            text-decoration: underline;
+        }
+
+        .content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Blog cá nhân</h1>
+        <div class="user-info">
+            <div th:if="${currentUser}">
+                Xin chào, <strong th:text="${currentUser}"></strong>!
+                <a href="/logout">Đăng xuất</a>
+            </div>
+            <div th:unless="${currentUser}">
+                <a href="/login">Đăng nhập</a> |
+                <a href="/register">Đăng ký</a>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <div class="content">
+        <div th:if="${message}" class="message" th:text="${message}"></div>
+
+        <div th:if="${currentUser}">
+            <a href="/blogs/create" class="btn">Viết bài mới</a>
+        </div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Tiêu đề</th>
+                    <th>Tóm tắt</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="blog : ${blogs}">
+                    <td th:text="${blog.title}"></td>
+                    <td th:text="${blog.summary}"></td>
+                    <td>
+                        <a th:href="@{/blogs/view/{id}(id=${blog.id})}" class="btn">Xem</a>
+                        <div th:if="${currentUser}">
+                            <a th:href="@{/blogs/edit/{id}(id=${blog.id})}" class="btn btn-warning">Sửa</a>
+                            <a th:href="@{/blogs/delete/{id}(id=${blog.id})}" class="btn btn-danger"
+                                onclick="return confirm('Bạn chắc chắn muốn xóa?')">Xóa</a>
+                        </div>
+                    </td>
+                </tr>
+                    </tbody>
+    </table>
+    </div>
+</body>
+
+</html>
