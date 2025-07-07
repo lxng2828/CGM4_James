@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Chủ</title>
+</head>
+
+<body>
+    <h1>Demo Spring Security</h1>
+    <p>Đây là trang công khai, ai cũng có thể thấy.</p>
+    <ul>
+        <li><a th:href="@{/client}">Truy cập trang Client (cần đăng nhập)</a></li>
+        <li><a th:href="@{/admin}">Truy cập trang Admin (cần quyền Admin)</a></li>
+    </ul>
+</body>
+
+</html>

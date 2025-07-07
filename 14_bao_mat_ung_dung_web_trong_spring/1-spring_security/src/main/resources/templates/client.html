@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Client</title>
+</head>
+
+<body>
+    <h1>Khu vực của Client</h1>
+    <p>Xin chào, <b><span th:text="${#authentication.name}"></span></b>!</p>
+    <p>Cả Admin và User đều có thể truy cập trang này.</p>
+
+    <form th:action="@{/perform_logout}" method="post">
+        <button type="submit">Đăng xuất</button>
+    </form>
+
+    <br />
+    <div sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/admin}">Đi đến trang Admin (chỉ Admin thấy link này)</a>
+    </div>
+</body>
+
+</html>
